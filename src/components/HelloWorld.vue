@@ -25,9 +25,12 @@
       </ol-source-vector>
     </ol-vector-layer>
 
-    <ol-geolocation :projection="projection" @change:position="geoLocChange">
+    <ol-geolocation :projection="projection" @change:position="geoLocChange" />
 
-    </ol-geolocation>
+    <ol-zoom-control />
+    <ol-zoomslider-control />
+    <ol-scaleline-control />
+    <ol-rotate-control />
   </ol-map>
 
   <button @click="() => (coordinate = coordinate.map((a) => a + 0.1))"
@@ -40,9 +43,16 @@
 
 <script setup lang="ts">
 //import hereIcon from "../assets/logo.png";
+import * as Vue from "vue";
 import { ref } from "vue";
 import type { View } from "ol";
 import type { ObjectEvent } from "ol/Object";
+
+import {store as y_store} from '@/y_store/';
+
+console.log(y_store)
+import { enableVueBindings, observeDeep } from "@syncedstore/core";
+enableVueBindings(Vue);
 
 const center = ref([40, 40]);
 const projection = ref("EPSG:4326");
@@ -57,6 +67,32 @@ const strokeWidth = ref(3);
 const strokeColor = ref("red");
 const fillColor = ref("white");
 let  coordinate = ref([0,0]);
+
+
+
+const positionsUpdate = (e: void) => {
+  console.log(e)
+  // if (markers.value != null) {
+  //   // markers.value.getSource().clear()
+  //   // e.forEach(position => { console.log("POS", position) })
+  //   for (let [clientID, position] of Object.entries(ystore.positions)) {
+  //     if (clientID != awareness.clientID) {
+  //       console.log("clientID", clientID, position[0], position[1])
+  //       const feature = new Feature({
+  //         geometry: new Geom.Point(position),
+  //       });
+  //       markers.value.source.addFeature(feature);
+  //     }
+  //   }
+  // }
+
+}
+
+
+
+
+observeDeep(y_store.todos, positionsUpdate)
+
 
 const geoLocChange = (event: ObjectEvent) => {
 

@@ -1,5 +1,10 @@
 # rdv-ts
 
+http : npm run serve
+
+https : npm run serve:https
+ localhost : https://localhost:8080
+
 ## Project setup
 ```
 npm install

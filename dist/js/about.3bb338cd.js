@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkrdv_ts"]=self["webpackChunkrdv_ts"]||[]).push([[443],{4007:function(n,t,r){r.r(t),r.d(t,{default:function(){return f}});var s=r(3396);const u={class:"about"},a=(0,s._)("h1",null,"This is an about page",-1),e=[a];function c(n,t){return(0,s.wg)(),(0,s.iD)("div",u,e)}var i=r(89);const o={},d=(0,i.Z)(o,[["render",c]]);var f=d}}]);
-//# sourceMappingURL=about.3bb338cd.js.map

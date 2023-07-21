@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve:http": "vue-cli-service serve",
-    "serve": "vue-cli-service serve --https true",
+    "serve": "vue-cli-service serve",
+    "serve:https": "vue-cli-service serve --https true",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "git": "npm run build && git add . && git commit -m",
@@ -24,7 +24,8 @@
     "y-indexeddb": "^9.0.11",
     "y-protocols": "^1.0.5",
     "y-webrtc": "^10.2.5",
-    "y-websocket": "^1.5.0"
+    "y-websocket": "^1.5.0",
+    "yjs": "^13.6.7"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.4.0",
