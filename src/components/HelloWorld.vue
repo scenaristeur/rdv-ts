@@ -32,7 +32,7 @@
 
   <button @click="() => (coordinate = coordinate.map((a) => a + 0.1))"
   type="button" >
-  change coordinates
+  change coordinates !
 </button>
 {{  coordinate }}
 </div>

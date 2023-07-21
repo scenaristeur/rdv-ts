@@ -3,6 +3,9 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
+// import {store as ystore} from './y_store'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ystore = require('./y_store')
 import OpenLayersMap , {
     type Vue3OpenlayersGlobalOptions,
   }  from "vue3-openlayers";
@@ -15,6 +18,7 @@ const options: Vue3OpenlayersGlobalOptions = {
 const app = createApp(App)
 .use(store)
 .use(router)
+.use(ystore)
 // .use(OpenLayersMap /* options */);
 .use(OpenLayersMap, options);
 
