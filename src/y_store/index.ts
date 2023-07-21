@@ -13,7 +13,7 @@ const shape = {
   // neurones: [],
   positions: {},
 };
-export const store = syncedStore({ positions: {} });
+export const store = syncedStore(shape);
 
 // Create a document that syncs automatically using Y-WebRTC
 const doc = getYjsDoc(store);
@@ -24,13 +24,16 @@ export const webrtcProvider = new WebrtcProvider("rdv", doc, {
     //   //"wss://y-webrtc-signaling-eu.herokuapp.com",
     //   "wss://y-webrtc-signaling-us.herokuapp.com",
     //   "wss://signaling.yjs.dev",
-    "wss://noosld-webrtc.glitch.me",
+   // "wss://rdv-webrtc.glitch.me/",
+   "wss://noosld-webrtc.glitch.me",
   ],
+  //maxConns: 20 + Math.floor(Math.random() * 15),
+ // filterBcConns: true,
 });
 
 //export const indexDBprovider = new IndexeddbPersistence("rdv", doc);
 export const websocketProvider = new WebsocketProvider(
-  "wss://yjs-leveldb.glitch.me/rdv",
+  "wss://rdv.glitch.me/rdv",
   "rdv",
   doc
 );
