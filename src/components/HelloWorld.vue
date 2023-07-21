@@ -42,7 +42,11 @@
     </ol-map>
 
     <button @click="() => fakeMove()" type="button">
-      change coordinates !
+      change coordinates
+    </button>
+
+    <button @click="() => resetMarkers()" type="button">
+      reset markers
     </button>
     {{ awareness.clientID }} ,
     <hr>
@@ -75,7 +79,7 @@ const map = ref(null);
 
 const contextMenuItems = ref([]);
 
-const markers = ref(null);
+let markers = ref(null);
 const Feature = inject("ol-feature");
 const Geom = inject("ol-geom");
 
@@ -162,6 +166,15 @@ const fakeMove = () => {
   coordinate.value = coordinate.value.map((a) => a + 0.1)
   console.log(coordinate)
   updateAwareness()
+}
+
+const resetMarkers  = () => {
+  markers = ref(null);
+  console.log(y_store.positions)
+  // for (const [key, value] of y_store.positions) { 
+  //   console.log(key, value)
+  //  }
+
 }
 
 contextMenuItems.value = [
