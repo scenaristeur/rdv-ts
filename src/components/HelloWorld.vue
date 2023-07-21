@@ -8,6 +8,17 @@
     </ol-tile-layer>
 
 
+    <ol-context-menu-control :items="contextMenuItems" />
+
+    <ol-vector-layer>
+      <ol-source-vector ref="markers"> </ol-source-vector>
+      <ol-style>
+        <ol-style-icon :src="marker" :scale="0.05"></ol-style-icon>
+      </ol-style>
+    </ol-vector-layer>
+
+
+
     <ol-vector-layer >
       <ol-source-vector>
         <ol-feature>
@@ -33,25 +44,30 @@
     <ol-rotate-control />
   </ol-map>
 
-  <button @click="() => (coordinate = coordinate.map((a) => a + 0.1))"
+  <button @click="() => fakeMove()"
   type="button" >
   change coordinates !
 </button>
-{{  coordinate }}
+{{ awareness.clientID }} , 
+<hr>
+{{  coordinate }} 
 </div>
 </template>
 
 <script setup lang="ts">
-//import hereIcon from "../assets/logo.png";
+// import marker from "@/assets/marker.png";
+import marker from "@/assets/marker.png";
 import * as Vue from "vue";
-import { ref } from "vue";
+import { ref, inject } from "vue";
 import type { View } from "ol";
 import type { ObjectEvent } from "ol/Object";
 
-import {store as y_store} from '@/y_store/';
+import {store as y_store, awareness} from '@/y_store/';
 
 console.log(y_store)
 import { enableVueBindings, observeDeep } from "@syncedstore/core";
+import { Coordinate } from "ol/coordinate";
+
 enableVueBindings(Vue);
 
 const center = ref([40, 40]);
@@ -61,6 +77,12 @@ const rotation = ref(0);
 const view = ref<View>();
 const map = ref(null);
 
+const contextMenuItems = ref([]);
+
+const markers = ref(null);
+const Feature = inject("ol-feature");
+const Geom = inject("ol-geom");
+
 
 const radius = ref(8);
 const strokeWidth = ref(3);
@@ -68,6 +90,28 @@ const strokeColor = ref("red");
 const fillColor = ref("white");
 let  coordinate = ref([0,0]);
 
+let name = 'Euser_'+Date.now()
+let color = '#ffb61e'
+
+awareness.on('change', (changes: any) => {
+  console.log(" on change awareness", changes)
+  // Whenever somebody updates their awareness information,
+  // we log all awareness information from all users.
+  console.log(Array.from(awareness.getStates().values()))
+})
+
+const updateAwareness = () => {
+awareness.setLocalStateField('user', {
+  // Define a print name that should be displayed
+  name: name,
+  // Define a color that should be associated to the user:
+  color: color, // should be a hex color,
+  coordinate: coordinate
+})
+console.log("awareness local", awareness)
+let clientID= awareness.clientID
+y_store.positions[clientID] = coordinate
+}
 
 
 const positionsUpdate = (e: void) => {
@@ -91,7 +135,7 @@ const positionsUpdate = (e: void) => {
 
 
 
-observeDeep(y_store.todos, positionsUpdate)
+observeDeep(y_store.positions, positionsUpdate)
 
 
 const geoLocChange = (event: ObjectEvent) => {
@@ -99,5 +143,39 @@ const geoLocChange = (event: ObjectEvent) => {
   view.value?.setCenter(event.target?.getPosition());
   coordinate.value = event.target?.getPosition()
   console.log(coordinate)
+  updateAwareness()
 };
+
+
+
+const fakeMove = ()=> {
+  coordinate.value = coordinate.value.map((a) => a + 0.1)
+  console.log(coordinate)
+  updateAwareness()
+}
+
+contextMenuItems.value = [
+  {
+    text: "Center map here",
+    classname: "some-style-class", // add some CSS rules
+    callback: (val: { coordinate: Coordinate | undefined; }) => {
+      view.value.setCenter(val.coordinate);
+    }, // `center` is your callback function
+  },
+  {
+    text: "Add a Marker",
+    classname: "some-style-class", // you can add this icon with a CSS class
+    // instead of `icon` property (see next line)
+    icon: marker, // this can be relative or absolute
+    callback: (val: { coordinate: Coordinate; }) => {
+      console.log(val);
+      const feature = new Feature({
+        geometry: new Geom.Point(val.coordinate),
+      });
+      markers.value.source.addFeature(feature);
+    },
+  },
+  "-", // this is a separator
+];
+
 </script>
